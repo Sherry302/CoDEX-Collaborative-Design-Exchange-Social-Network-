@@ -1,0 +1,351 @@
+body {
+	margin: 10px;
+}
+
+.space {
+	 margin-top: 15px;   
+}
+
+/* Images styles */
+.image {
+	width: 150px;
+	height: 150px;
+}
+
+img.keepratio {
+	min-width: none;
+	height: 150px6
+	max-width: 150px;
+}
+
+img.profileimg {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	min-width: none;
+	height: 150px;
+	max-width: 150px;
+}
+
+img.profileimg-md {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	min-width: none;
+	height: 100px;
+	max-width: 100px;
+}
+
+img.profileimg-small {
+	display: inline;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 4px;
+	margin-bottom: 4px;
+	min-width: none;
+	height: 30px;
+	max-width: 30px;
+}
+
+img.postimg {
+	display: inline;
+	padding: 5px;
+	min-width: none;
+	height: 150px;
+	max-width: none;
+}
+
+img.postimg-small{
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	min-width: none;
+	height: 60px;
+	max-width: none;
+}
+
+img.postimg-small {
+	display: inline;
+	margin-left: auto;
+	margin-right: auto;
+	min-width: none;
+	height: 50px;
+	max-width: 50px;
+}
+
+/* Grid styles - same height */
+.row {
+	display: table;
+	width: 100%;
+}
+
+.post-page-section div.row [class*="col-"] {
+	display: table-cell;
+	vertical-align: top;
+}
+
+
+/* Design Market Page */
+
+#my-jumbotron {
+	padding-left: 0px;
+	padding-right: 0px;
+	background-image: url('../../static/images/idea.jpg');  
+	height: 400px;  
+	opacity: 0.8; 
+}
+
+img.img-square {
+	display: block;
+	/* text-align: center; */
+	margin-left: auto;
+	margin-right: auto;
+	width: 64px;
+	height: 64px;
+}
+
+div.semi-clear-background #global-requests-table th,td {
+	text-align:center;
+	font-size: 14px;
+	padding: 2px;
+	margin: 2px 0px 2px 0px;
+	border-top: none;
+}
+
+div.semi-clear-background {
+	margin: 0px 0 20px 0;
+	padding: 30px 20px 15px 20px;
+	background-color: rgba(242, 242, 242, 0.33);
+}
+
+img.done-logo-table {
+	width: 35%;
+	position: relative;
+	bottom: 0px;
+	left: 0px;
+}
+
+/* Post listing style */
+.post-container {
+	margin-left: auto;
+	margin-right: auto;
+	width:100%;
+	height:250px;
+	padding: 6%;
+	margin-bottom: 20px;
+	line-height: 1.42857143;
+	background-color: rgba(242, 242, 242, 0.33);
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	transition: border .2s ease-in-out;
+}
+
+table.post-table td {
+	padding: 2px;
+	margin: 2px;
+}
+
+table.post-table tr.post-button {
+	position: absolute;
+	bottom: 40px;
+	right: 40px;
+}
+
+p.post-shortened-title {
+	white-space: nowrap; 
+	width: 200px; 
+	overflow: hidden;
+	text-overflow: ellipsis;
+	font-weight: bold;
+	font-size: 18px;
+}
+
+p.post-shortened-text {
+	white-space: nowrap; 
+	width: 200px; 
+	overflow: hidden;
+	text-overflow: ellipsis;
+	font-style: italic;
+	font-size: 15px;
+}
+
+p.post-info {
+	margin: 0px;
+}
+
+p.interest-names-designer-homepage {
+	display: inline;
+	font-style: italic;
+	font-size: 15px;
+	font-weight: bold;
+	padding: 10px 10px 10px 10px;
+}
+
+form.add-interest-designer-homepage {
+	padding-bottom: 20px;
+	padding-top: 10px;
+}
+
+/* Post detail page styles */
+div.post-page-container {
+}
+
+div.post-page-section {
+	margin: 40px 0 40px 0;
+	padding: 40px 0px 40px 0px;
+	background-color: rgba(242, 242, 242, 0.33);
+}
+
+div.post-page-section p.post-title {
+	font-size: 18px;
+	font-weight: 800;
+	padding: 0 0 0 0;
+}
+
+p.tag {
+	display: inline;
+	font-size: 14px;
+	padding: 4px;
+}
+
+p.tag_num_posts {
+	display: inline;
+	font-size: 12px;
+	color: blue;
+}
+
+p.bidding-designer-list {
+	display: inline;
+	margin-right: 5px;
+	margin-left: 20px;
+}
+
+ul.bidding-designer-list li {
+	display: inline-block;
+	width: 200px;
+}
+
+p.maintext {
+	word-wrap: break-word;
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+div.post-page-container table.view-post-page-table td {
+	border: none;
+	border-top: none;
+	text-align: justify;
+}
+
+div.post-page-container table.view-post-page-table tr.active th {
+	background-color: transparent;
+	border: none;
+	border-bottom: 3px solid rgba(255, 255, 255, 0.2);
+}
+
+form.tag-input-in-post {
+	 position: relative; 
+	 right: 5px; 
+	 top: 5px;
+	 padding: 0 5px 5px 0;
+}
+
+div.fb-like {
+	position: relative;
+	left: 20px;
+	bottom: -20px;
+}
+
+.comment-btn-inline {
+	display: inline;
+	position: absolute;
+	right: 20px;
+}
+
+img.done-logo {
+	width: 15%;
+	position: absolute;
+	top: -20px;
+	right: 40px;
+}
+
+img.done-logo-listing {
+	width: 35%;
+	position: absolute;
+	bottom: 20px;
+	left: 20px;
+}
+
+/* Profile page */
+table.profile-table th {
+	width: 100px;
+	text-align: right;
+	padding-right: 20px;
+	margin: 4px;
+}
+
+table.profile-table td {
+	width: 300px;
+	text-align: left;
+	padding: 2px;
+	margin: 4px;
+}
+
+.blk-center {
+	margin-left: auto;
+	margin-right: auto;
+	width:100%;
+}
+
+/* Text styles */
+.text-center {
+	text-align:center;
+	font-size: 16px;
+	padding: 2px;
+	margin: 2px 0px 2px 0px;
+}
+
+.text-small {
+	font-size: 12px;
+}
+
+p.shortened-text {
+	white-space: nowrap; 
+	width: 200px; 
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+p.inline-center {
+	display: inline;
+	vertical-align: center;
+}
+
+p.comment-text {
+	display: inline;
+	margin-left: 10px;
+}
+
+p.comment-date {
+	display: inline;
+	margin-left: 20px;
+}
+
+/* Request posting page style */
+ul.post_request_tags_list li {
+	display: inline-block;
+	width: 150px;
+}
+
+ul.post_request_mode li {
+	display: inline-block;
+	width: 200px;
+}
+
+.messages {
+    color:blue;
+    text-align: center;
+    font-size: large;
+    font-family: sans-serif;
+    padding: 25px 50px;
+}

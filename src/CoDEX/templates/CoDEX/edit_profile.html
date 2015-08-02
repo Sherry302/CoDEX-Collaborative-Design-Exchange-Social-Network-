@@ -1,0 +1,40 @@
+{% extends template_current_status %}
+{% load staticfiles %}
+
+{% block content %}
+
+<div class="container ">
+ <div class="row well well-lg row clearfix ">
+    <div class="col-md-3 blog-main">
+      {% if profile.profile_image %}
+      <img src="{% url 'photo' profile.user.id %}" alt="140x140" class="image">
+      {% else %}
+      <img alt="140x140" src="../../static/images/default.jpg" class="image">
+      {% endif %}
+      <p class="lead">User Name: {{ profile.user.get_username }}</p>
+    
+    <form enctype = "multipart/form-data" action = "{% url 'edit_profile_photo' %}" method ="post">
+       <input id = "id_picture" name = "profile_image" type="file" class="btn btn-xs btn-primary" style="width:200px;">
+       <input type="submit" class="btn btn-xs btn-success" value="Save profile">
+       {% csrf_token %}
+   </form>
+   </div> 
+ 
+<div class="col-md-9 blog-main well well-lg">
+  <form method="post" enctype="multipart/form-data" action="{% url 'edit_profile' user.id %}">
+        <table>
+            {% for field in form.visible_fields %}
+                <tr>
+                    <td class="lead">{{field.label_tag}}</td>
+                    <td class="lead">{{field}}</td>
+                    <td class="lead">{{field.errors}}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        {% csrf_token %}
+        <a href="{% url 'view_profile' user.id%}"><button type="submit" class="btn btn-primary space">Save</button></a>
+    </form>
+</div>
+</div>
+</div>
+{% endblock %}

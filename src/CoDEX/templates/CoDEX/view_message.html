@@ -1,0 +1,21 @@
+{% extends template_current_status %}
+{% load staticfiles %}
+
+{% block content %}
+
+<div class="well well-lg row clearfix ">
+<div> 
+	<h2 class="media-heading">Subject: {{my_message.subject}}</h2>
+	<p class='lead'>From: <a href="{% url 'view_profile' my_message.sender.id %}">{{my_message.sender.username}}</a>&nbsp &nbsp	To: <a href="{% url 'view_profile' my_message.recipient.id %}">{{my_message.recipient.username}}</a></p>
+	<p>Time: {{my_message.time_stamp}}</p>
+</div>
+<div>
+	<pre class="media-body">{{my_message.content}}</pre>
+	{% if my_message.my_message %}
+	<img src="{% url 'my_message' my_message.id %}"  class="img-thumbnail">
+	{% endif %}
+
+</div>
+
+{% endblock %}
+

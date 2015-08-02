@@ -1,0 +1,65 @@
+{% extends template_current_status %}
+{% load staticfiles %}
+
+{% block content %}
+
+<div class="container" style="opacity: 0.85;">
+	<div class="row">
+		<div class="col-lg-10">
+			<h1 class="page-header">Hey! Welcome to CoDEX!
+				<small>Design is power.</small>
+			</h1>
+
+		</div>
+	</div>
+
+		{% if posts %}
+			<p class="lead"> My Requests: </p>
+		{% else %}
+			<p class="lead"> Oops, you haven't post any requests yet. <br>
+				Got an idea? Post one to receive help from the best designer students today!</p>
+			<a class="btn btn-primary btn-lg" href="{% url 'add_post' %}" role="button">Post a Design Request</a>
+		{% endif %}
+
+		{% for post in posts %}
+		{% cycle '<div class="row">' '' '' %}
+		<div class="col-sm-6 col-md-4 blog-main">
+		 	<div class="post-container">
+		 		<table class="post-table">
+		 			<tbody>
+		 				<tr>
+							<td><h4>{{ post.title }}</h4></td>
+						</tr>
+						<tr>
+							<td ><p>Posted Date: {{ post.date_posted }}</p></td>
+						</tr>
+						<tr>
+							<td ><p>Current Status: 
+								{% if not post.designer %}
+									Waiting for designer to accept.
+								{% elif not post.design_response.design_uploaded %}
+									Waiting for designer to upload design.
+								{% elif not post.date_final_design_accepted %}
+									Waiting for your confirmation.
+								{% elif not post.gift_received %}
+									Waiting for gift confirmation.
+								{% elif post.gift_received %}
+									Completed.
+								{% endif %}
+							</p></td>
+						</tr>
+						<tr class="post-button">
+							<td><a class="btn btn-primary" href="{% url 'view_post' post.id %}" role="button">View Details</a></td>
+						</tr>
+						{% if post.date_final_design_accepted and post.gift_received %}
+						<img src="{% static 'images/done-logo.png' %}" class="done-logo-listing">
+						{% endif %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+		{% cycle ,,</div> %}
+
+		{% endfor %}
+</div>
+{% endblock %}

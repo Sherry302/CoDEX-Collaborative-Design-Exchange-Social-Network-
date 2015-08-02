@@ -1,0 +1,46 @@
+{% extends template_current_status %}
+{% load staticfiles %}
+
+{% block content %}
+<div class="tab-pane" id="panel-message">
+	<div class="col-md-12 column panel panel-default">
+		<div class = "col-md-3 column space" id="pills-message-Tabs">
+			<ul class="nav nav-pills nav-stacked well well-lg " role="tablist">  
+				<li role="presentation" class="active"><a href="#panel-inbox">Inbox Box</a></li>
+				<li role="presentation"><a href="#panel-sent">Sent Box</a></li>
+				<li role="presentation"><a href="#panel-trash">Trash</a></li>
+			</ul>
+		</div>
+		<div class = "tab-content col-md-9 column space">
+			<div class="tab-pane active" id = "panel-inbox">
+				<div class = "col-md-12 column well well-lg">
+					{% for message in received_messages %}
+					<li> <a href="view_message?message_id={{message.id}}"><pre>{{message.subject}}</pre></a> </li>
+					{% endfor %}
+				</div>
+			</div>
+			<div class="tab-pane" id = "panel-sent">
+				<div class = "col-md-12 column well well-lg">
+					{% for message in sent_messages %}
+					<li> <a href="view_message?message_id={{message.id}}"><pre>{{message.subject}}</pre></a> </li>
+					{% endfor %}
+				</div>
+			</div>
+			<div class="tab-pane" id = "panel-compose">
+				<div class = "col-md-12 column well well-lg">				
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$("#pills-message-Tabs a").click(function (e) {
+		e.preventDefault()
+		$(this).tab('show')
+	});
+</script>
+
+{% endblock %}
+

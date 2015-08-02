@@ -1,0 +1,369 @@
+{% extends template_current_status %}
+{% load staticfiles %}
+
+{% block content %}
+
+<div class="post-page-container container">
+	<!-- Request Info Session -->
+	<div class="post-page-section row">
+		<div class="col-md-2">
+			{% if post.user.userprofile.profile_image %}
+			<img src="{% url 'photo' post.user.id %}" alt="140x140" class="profileimg">
+			{% else %}
+			<img alt="140x140" src="{% static 'images/default.jpg' %}" class="profileimg">
+			{% endif %}
+			<p class="text-center"><a href="{% url 'view_profile' post.user.id%}">{{ post.user.get_username }}</a></p>
+			{% if liked == 0 %}
+			<div class="text-center">
+				<form action="{% url 'like_post' post.id%}" method="post" accept-charset="utf-8">
+					<button class="glyphicon glyphicon-thumbs-up" type="submit">like({{post.liked.count}})</button>
+					{%csrf_token%}
+				</form>
+			</div>
+			{% else %}
+			<div class="text-center">
+				<form action="{% url 'delete_like' post.id%}" method="post" accept-charset="utf-8">
+					<button class="glyphicon glyphicon-thumbs-up" type="submit">cancel({{post.liked.count}})</button>
+					{%csrf_token%}
+				</form>
+			</div>
+			{% endif %}
+
+			<!--i class="glyphicon glyphicon-thumbs-up"></i><i>Cancel</i-->
+			<!-- Facebook share button -->
+			<div class="text-center fb-share-button" data-href="#" data-layout="button_count" style="display:block;"></div>
+
+			<!-- Follow/Unfollow -->
+			{% if post.user = nowuser %}
+			{% elif post.isFriend %}
+				<form class="text-center" action="{% url 'remove_friend' post.user.id %}" method="post">
+					<input type="submit" class="btn btn-default btn-sm" value="Unfollow">
+					{% csrf_token %}
+				</form>
+			{% else %}
+				<form class="text-center" action="{% url 'add_friend' post.user.id %}" method="post">
+					<input type="submit" class="btn btn-default btn-sm" value="Follow user">
+					{% csrf_token %}
+				</form>
+			{% endif %}
+		</div>
+		
+		<div class="col-md-10">
+			<table class="table table-responsive view-post-page-table">
+				<colgroup>
+					<col class="col-md-3">
+					<col class="col-md-1">
+				</colgroup>
+
+				<tbody>
+					<tr><td><p class="post-title">{{post.title}}</p></td></tr>
+					<tr class="active"><th>Description</th></tr>
+					<tr><td><p class="maintext">{{post.text}}</p></td></tr>
+					<tr class="active"><th>Tags</th></tr>
+					<tr>
+						{% if post.tags.all %}
+							<td>
+								{% for tag in post.tags.all %}
+									<p class="tag">{{tag.name}}</p><p class="tag_num_posts">{{tag.num_posts}}</p>;
+								{% endfor %}
+								<form class="tag-input-in-post form-inline" action='{% url 'tag_a_post' %}' method='post'>
+									<input type="text" class="form-control" placeholder="One tag at a time" name="tag_name" style="display: inline; width: auto">
+									<input type="hidden" name='post_id' value={{post.id}}>
+									<input type="submit" class="btn" value="Add Tag">
+									{%csrf_token%}
+								</form>
+							</td>
+						{% else %}
+							<td>
+								<p>Not tagged yet</p>
+								<form class="form-inline" action='{% url 'tag_a_post' %}' method='post' style='position: relative; right: 5px; top: 5px;'>
+									<input type="text" class="form-control" placeholder="One tag at a time" name="tag_name" style="display: inline; width: auto">
+									<input type="hidden" name='post_id' value={{post.id}}>
+									<input type="submit" class="btn" value="Add Tag">
+									{%csrf_token%}
+								</form>
+							</td>
+						{% endif %}
+					</tr>
+					<tr class="active"><th>Reference Images</th></tr>
+					<tr>
+						<td>
+							{% for draft_id in drafts_id %}
+							<a href="{% url 'view_uploaded_image' draft_id %}"><img alt="140x140" src="{% url 'view_uploaded_image' draft_id %}" class="postimg"></a>
+							{% endfor %}
+						</td>
+						
+					</tr>
+					<tr class="active"><th>Gift Granted</th></tr>
+					<tr>
+						<td><p class="maintext">{{post.gift_info}}</p></td>
+					</tr>
+					<tr>
+						{% if gift_image_id %}
+						<td><a href="{% url 'view_uploaded_image' gift_image_id %}"><img alt="140x140" src="{% url 'view_uploaded_image' gift_image_id %}" class="postimg"></td></a>
+						{% endif %}
+					</tr>
+				</tbody>
+			</table>
+
+			<div class="row">
+				<div class="col-md-10">
+				{% if not post.accepted%}
+					<!-- Bidding Cases  -->
+					{% if post.request_mode == 2 %}
+						<!-- Anyone except the poster can bid -->
+						{% if not user = post.user %}
+							<p class="maintext"> This is a bidding request! Any designer can bid on the request and the poster will make the decision on the designer.</p>
+							<h5 style="margin-left: 20px;"> Current bidding designers: </h5>
+							{% for designer in post.bidding_designers.all %}
+								<p class="bidding-designer-list">
+									{% if designer.userprofile.profile_image %}
+									<img src="{% url 'photo' designer.id %}" alt="140x140" class="profileimg-small">
+									{% else %}
+									<img alt="140x140" src="{% static 'images/default.jpg' %}" class="profileimg-small">
+								{% endif %}
+									<a href="{% url 'view_profile' designer.id%}">{{designer.username}}</a>
+								</p>
+							{% endfor %}
+							<br>
+							<form method="POST" action="{% url 'accept_request' %}">
+								<input type="submit" class="btn btn-primary" role="button" value="Bid">
+								<input type="hidden" name="post_id" value={{post.id}}>
+								{% csrf_token %}
+							</form>
+						<!-- Poster can choose one user -->
+						{% elif not post.designer %}
+							<h5 style="margin-left: 20px;"> Current bidding designers: </h5>
+
+							<form method="post" action="{% url 'select_designer' %}">
+								<div class="form-group">
+									<ul id="id_select_designer" class="bidding-designer-list">
+										{% for designer in post.bidding_designers.all %}
+											<li>
+												<input id="id_select_designer_{{forloop.counter}}" name="selected_designer" type="radio" value="{{designer.id}}" />
+												{% if designer.userprofile.profile_image %}
+													<img src="{% url 'photo' designer.id %}" alt="140x140" class="profileimg-small">
+												{% else %}
+													<img alt="140x140" src="{% static 'images/default.jpg' %}" class="profileimg-small">
+												{% endif %}
+												<a href="{% url 'view_profile' designer.id%}">{{designer.username}}</a>
+											</li>
+										{% endfor %}
+									</ul>
+									<input type="submit" class="btn btn-primary" role="button" value="Confirm designer" style="position: relative; left: 50px;">
+								</div>
+								<input type="hidden" name="post_id" value={{post.id}}>
+								{% csrf_token %}
+							</form>
+						{% else%}
+							<label style="margin-left: 20px;"> The selected designer: </label>
+							{% if post.designer.userprofile.profile_image %}
+								<img src="{% url 'photo' post.designer.id %}" alt="140x140" class="profileimg-small">
+							{% else %}
+								<img alt="140x140" src="{% static 'images/default.jpg' %}" class="profileimg-small">
+							{% endif %}
+							<a href="{% url 'view_profile' post.designer.id%}">{{post.designer.username}}</a>
+						{% endif %}
+
+					<!-- First Come First Serve Cases -->
+					{% else %}
+						<!-- Anyone except the poster can bid -->
+						{% if not user = post.user %}
+							<p class="maintext"> This is a first-come-first-serve request! So any designer who wants to do the poster a favor can directly accept it. After acception, the designer will have 3 days to finish the request and submit, or the request will be open again.</p>
+							<form method="POST" action="{% url 'accept_request' %}">
+								<input type="submit" class="btn btn-primary" role="button" value="Accept Request">
+								<input type="hidden" name="post_id" value={{post.id}}>
+								{% csrf_token %}
+							</form>
+						{% endif %}
+					{% endif %}
+				{% elif not post.design_response.design_uploaded and user = post.designer %}
+					<form method="POST" action="{% url 'edit_response' %}">
+						<input type="submit" class="btn btn-primary" role="button" value="Submit Response">
+						<input type="hidden" name="post_id" value="{{post.id}}">
+						{% csrf_token %}
+					</form>
+				{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Designer Response Session -->
+	{% if post.design_response.design_uploaded %}
+	<div class="post-page-section row">
+		<!-- Designer Info -->
+		<div class="col-md-2">
+			{% if post.designer.userprofile.profile_image %}
+			<img src="{% url 'photo' post.designer.id %}" alt="140x140" class="profileimg">
+			{% else %}
+			<img alt="140x140" src="{% static 'images/default.jpg' %}" class="profileimg">
+			{% endif %}
+			<p class="text-center"><a href="{% url 'view_profile' post.designer.id%}">{{ post.designer.get_username }}</a></p>
+			
+			{% if liked == 0 %}
+			<div class="text-center">
+				<form action="{% url 'like_post' post.id%}" method="post" accept-charset="utf-8">
+					<button class="glyphicon glyphicon-thumbs-up" type="submit">like({{post.liked.count}})</button>
+					{%csrf_token%}
+				</form>
+			</div>
+			{% else %}
+			<div class="text-center">
+				<form action="{% url 'delete_like' post.id%}" method="post" accept-charset="utf-8">
+					<button class="glyphicon glyphicon-thumbs-up" type="submit">cancel({{post.liked.count}})</button>
+					{%csrf_token%}
+				</form>
+			</div>
+			{% endif %}
+
+			<!-- Facebook share button -->
+			<div class="text-center fb-share-button" data-href="#" data-layout="button_count" style="display:block;"></div>
+		</div>
+
+		<div class="col-md-10">
+			<table class="table table-responsive view-post-page-table">
+				<colgroup>
+					<col class="col-md-3">
+					<col class="col-md-1">
+				</colgroup>
+
+				<tbody>
+					<tr class="active"><th>Description</th></tr>
+					<tr><td><p>{{post.design_response.design_description}}</p></td></tr>
+					<tr class="active"><th>Final Designs</th></tr>
+					<tr>
+						<td>
+							{% for design_id in designs_id %}
+							<a href="{% url 'view_uploaded_image' design_id %}"><img alt="140x140" src="{% url 'view_uploaded_image' design_id %}" class="postimg"></a>
+							{% endfor %}
+						</td>
+					</tr>
+
+					<!-- Request poster only, message designer/accept design -->
+					{% if post.user = user and not post.date_final_design_accepted %}
+						<tr class="active"><th>Next Step</th></tr>
+						<tr><td>
+							<p style="font-weight: bold;">Hooray! You got the response from the designer!</p>
+							<p>If you have any further concerns or requirements, don't hesitate to send him/her a message. If you are satisfied with the design work, please click on the ACCEPT DESIGN button and get your granted gift prepared!</p>
+						</td></tr>
+						<tr><td>
+							<form method="POST" action="{% url 'accept_design' %}" style="display: inline;">
+								<input type="submit" class="btn btn-primary" role="button" value="Accept Design">
+								<input type="hidden" name="post_id" value="{{post.id}}">
+								{% csrf_token %}
+							</form>
+							<a href="/send_message?recipient_id={{post.designer.id}}"><button type="button" class="btn btn-primary"> Contact Designer </button></a>
+						</td></tr>
+					<!-- Design already accepted -->
+					{% elif post.user = user and post.date_final_design_accepted and not post.gift_received %}
+						<tr class="active"><th>Next Step</th></tr>
+						<tr><td>
+							<p style="font-weight: bold;">You have accepted the design. Go contact the designer to thank him/her with your heartful gift!</p> 
+							<a href="/send_message?recipient_id={{post.designer.id}}"><button type="button" class="btn btn-primary"> Contact Designer </button></a>
+							<p style="font-weight: bold;">Or contact via Email: {{post.user.email}}</p> 
+						</td></tr>
+					{% endif %}
+
+					<!-- Designer only, edit response -->
+					{% if post.designer == user and not post.date_final_design_accepted %}
+						<tr><td>
+						<form method="POST" action="{% url 'edit_response' %}">
+							<input type="submit" class="btn btn-primary" role="button" value="Edit Response">
+							<input type="hidden" name="post_id" value="{{post.id}}">
+							{% csrf_token %}
+						</form>
+						</td></tr>
+					{% elif post.designer == user and post.date_final_design_accepted and not post.gift_received %}
+						<tr class="active"><th>Next Step</th></tr>
+								<tr><td>
+									<p style="font-weight: bold;">Your design has been accepted!! Have you received your gift yet? Confirm it or message the design seeker to claim your gift!</p>
+									<form method="POST" action="{% url 'confirm_gift' %}" style="display: inline;">
+										<input type="submit" class="btn btn-primary" role="button" value="I have received the gift.">
+										<input type="hidden" name="post_id" value="{{post.id}}">
+										{% csrf_token %}
+									</form>
+									<a href="/send_message?recipient_id={{post.user.id}}"><button type="button" class="btn btn-primary"> Contact Design Seeker </button></a>
+								</td></tr>
+					{% endif %}
+					{% if post.date_final_design_accepted and post.gift_received %}
+						<img src="{% static 'images/done-logo.png' %}" class="done-logo">
+					{% endif %}
+				</tbody>
+			</table>
+
+			
+		</div>
+	</div>
+	{% endif %}
+
+	<div class="post-page-section row">
+		<!-- Comment -->
+		{% if user.is_authenticated %}
+			<div class="col-md-2">
+				{% if user.userprofile.profile_image %}
+				<img src="{% url 'photo' user.id %}" alt="140x140" class="profileimg">
+				{% else %}
+				<img alt="140x140" src="{% static 'images/default.jpg' %}" class="profileimg">
+				{% endif %}
+				<p class="text-center"><a href="{% url 'view_profile' user.id%}">{{ user.get_username }}</a></p>
+			</div>
+			<div class="col-sm-10">
+				<textarea class="form-control" cols="40" id="id_text" maxlength="500" name="comment" placeholder="Any comment to this idea/design? ..." rows="5"></textarea>
+				<br>
+				<div class="col-lg-2">
+					<button type="submit" class="btn btn-primary" role="button" name="comment-btn">Comment</button>
+				</div>
+				<input type="hidden" name="post_id" value={{post.id}}>
+				{% csrf_token %}
+			</div>
+		{% else %}
+		<!-- Unlogedin comment -->
+			<div class="col-md-2"></div>
+			<div class="col-sm-8">
+				<textarea class="form-control" cols="40" id="id_text" maxlength="500" name="comment" placeholder="Any comment to this idea/design? ..." rows="5"></textarea>
+				<br>
+				<input class="form-control" type="text" name="username" placeholder=" guest screen name" style="display: inline; width: 200px;">
+				<p style="vertical-align: middle; display: inline;"> or </p> 
+				<form action="{% url 'login' %}" method="GET" style="display: inline;">
+					<button  class="btn btn-sm" role="button">login</button>
+				</form>
+				<button type="submit" class="comment-btn-inline btn btn-primary btn-sm" role="button" name="comment-btn">Comment</button>
+				<input type="hidden" name="post_id" value={{post.id}}>
+				{% csrf_token %}
+			</div>
+		{% endif %}
+	</div>
+	
+	<div class="post-page-section row" id="comment_section">
+	{% if comments %}
+		<!--Show Comments-->
+		{% for comment in comments %}
+		<div class="row" name="comment-entry">	
+			<div class="col-md-1"></div>	
+			<div class="col-md-10">
+				{% if comment.user %}
+				<a href="{% url 'view_profile' comment.user.id%}">
+					{% if comment.user.userprofile.profile_image %}
+					<img src="{% url 'photo' comment.user.id %}" alt="140x140" class="profileimg-small">
+					{% else %}
+					<img alt="140x140" src="{% static 'images/default.jpg' %}" class="profileimg-small">
+					{% endif %}
+					{{ comment.user.get_username }} :
+				</a>
+				{% else %}
+					<img alt="140x140" src="{% static 'images/default.jpg' %}" class="profileimg-small">
+					<p class="inline-center">{{ comment.username }} (Guest) :</p>
+				{% endif %}
+				<p class="comment-text">{{comment.text}}</p>
+				<p class="comment-date">@{{comment.date_posted}}</p>
+			</div>
+		</div>
+		{% endfor %}
+	{% endif %}
+	</div>
+</div>
+
+<script src="{% static 'js/comment.js' %}"></script>
+
+{% endblock %}

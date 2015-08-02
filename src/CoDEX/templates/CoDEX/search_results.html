@@ -1,0 +1,104 @@
+{% extends template_current_status %}
+{% load staticfiles %}
+
+{% block content %}
+
+<div class="container">
+<div class="col-md-12 row well well-lg clearfix">
+	<div class="col-md-3 blog-main">
+	    <div>
+		   <h3> Results for: {{keyword}}</h4>
+	    </div>
+		<form method='get' action="{% url 'search' %}">
+			<select class="selectpicker" name="category" data-width="350px" data-live-search="false">
+			    <option>Please Select ...</option>
+				<option>Post Tag</option>
+				<option>Post Title and Context</option>
+				<option>User Profile</option>
+			</select>
+			<input type="hidden" name="keyword" value="{{keyword}}">
+			<br>
+			<br>
+			<button class="btn btn-primary" type="submit">Filter Result</button>
+		</form>
+	</div> 
+ 
+  <div class="col-md-9 blog-main well well-lg">
+    {% for user_search in users %}
+	<div class="col-md-12">
+	<div class="col-md-3 blog-main">
+		{% if user_search.userprofile.profile_image %}
+		<img src="{% url 'photo' profile.user.id %}" alt="140x140" class="profileimg">
+		{% else %}
+		<img alt="140x140" src="../../static/images/default.jpg" class="profileimg">
+		{% endif %}
+		<p class="text-center">User Name: {{ user_search.get_username }}</p>
+	</div> 
+ 
+  <div class="col-md-9 blog-main well well-lg">
+	<table class="profile-table">
+		<colgroup>
+			<col style="width: 40%">
+			<col style="width: 60%">
+		</colgroup>
+		<tr><th>User Name</th><td>{{ user_search.get_username }}</td>
+		<tr><th>First Name</th><td> {{ user_search.first_name }}</td>
+		<tr><th>Last Name</th><td> {{ user_search.last_name }}</td>
+		<tr><th>Email</th><td> {{user_search.email}}</td>
+		<tr><th>Age </th><td>{{ user_search.userprofile.age }}</td>
+		<tr><th>Bio</th><td>{{ user_search.userprofile.bio }}</td>
+		<tr><th>Role</th><td>{{ user_search.userprofile.role }}</td>
+		<tr><th>School</th><td>{{ user_search.userprofile.school }}</td>
+	</table>
+
+	<a href="/send_message?recipient_id={{profile.user.id}}"><button type="button" class="btn btn-primary space"> Contact User </button></a>
+  </div>
+
+</div>
+{% endfor %}
+
+{% for post in posts %}
+		<div class="col-md-12 blog-main well well-lg">
+		 <div class="col-md-3 blog-main">
+			{% if post.user.userprofile.profile_image %}
+			<img src="{% url 'photo' post.user.id %}" alt="100x100" class="profileimg">
+			{% else %}
+			<img alt="140x140" src="{% static 'images/default.jpg' %}" class="profileimg">
+			{% endif %}
+			<p class="text-center">
+				<a href="{% url 'view_profile' post.user.id%}">{{ post.user.get_username }}</a>
+			</p>
+			{% if post.user = nowuser %}
+			{% elif post.isFriend %}
+				<form class="text-center" action="{% url 'remove_friend' post.user.id %}" method="post">
+					<input type="submit" class="btn btn-default btn-sm" value="Unfollow">
+					{% csrf_token %}
+				</form>
+			{% else %}
+				<form class="text-center" action="{% url 'add_friend' post.user.id %}" method="post">
+					<input type="submit" class="btn btn-default btn-sm" value="Follow user">
+					{% csrf_token %}
+				</form>
+			{% endif %}
+				
+			<p class="text-small text-center">{{ post.date_posted }}</p>
+		 </div>
+         <div class="col-md-9">
+		 <div class="blog-main well well-lg">
+			 <p>Title: {{ post.title }}</p>
+			 {% for draft in post.drafts.all %}
+							<img alt="140x140" src="{% url 'view_uploaded_image' draft.id %}" class="keepratio" style="width:60px;height:60px">
+				{% endfor %}
+		 </div>
+		 <div>
+			<a class="btn btn-primary btn-lg" href="{% url 'view_post' post.id %}" role="button">View Details</a>
+		</div>
+		</div>
+	</div>  
+{% endfor %}
+
+</div>
+</div>
+
+{% endblock %}
+

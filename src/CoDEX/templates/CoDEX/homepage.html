@@ -1,0 +1,44 @@
+{% extends template_current_status %}
+{% load staticfiles %}
+
+{% block content %}
+
+<div class="container" style="opacity: 0.85;">
+	<div class="row">
+			<h1 class="page-header">Hey! Welcome to CoDEX!
+				<small>Design is power.</small>
+			</h1>
+	</div>
+
+		<p class="lead"> My Requests: </p>
+		{% for post in posts %}
+		{% cycle '<div class="row">' '' '' %}
+		<div class="col-sm-6 col-md-4 blog-main">
+		 	<div class="post-container">
+		 		<table class="post-table">
+		 			<tbody>
+		 				<tr>
+							<td><h4>{{ post.title }}</h4></td>
+						</tr>
+						<tr>
+							<td ><p>Posted Date: {{ post.date_posted }}</p></td>
+						</tr>
+						<tr>
+							<td ><p>Current Status: Waiting for response</p></td>
+						</tr>
+						<tr class="post-button">
+							<td><a class="btn btn-primary btn-lg" href="{% url 'view_post' post.id %}" role="button">View Details</a></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		{% if forloop.last %}
+		{% if accepted_requests_ifmod3 %}
+			</div>
+		{% endif %}
+		{% endif %}
+		{% cycle ,,</div> %}
+		{% endfor %}
+</div>
+{% endblock %}

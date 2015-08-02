@@ -1,0 +1,67 @@
+{% extends template_current_status %}
+{% load staticfiles %}
+
+{% block content %}
+{{design_response}}
+
+<div class="post-page-container container">
+	<!-- Designer Response Session -->
+	<div class="post-page-section row">
+		<!-- Designer Info -->
+		<div class="col-md-2">
+			{% if design_response.designer.userprofile.profile_image %}
+			<img src="{% url 'photo' user.id %}" alt="140x140" class="profileimg">
+			{% else %}
+			<img alt="140x140" src="{% static 'images/default.jpg' %}" class="profileimg">
+			{% endif %}
+			<p class="text-center"><a href="{% url 'view_profile' user.id%}">{{ user.username }}</a></p>
+		</div>
+
+		<div class="col-md-10">
+			<form method="POST" action="{% url 'submit_response' %}" enctype="multipart/form-data">
+				<table class="table table-responsive view-post-page-table">
+					<colgroup>
+						<col class="col-md-3">
+						<col class="col-md-1">
+					</colgroup>
+
+					<tbody>
+						<tr class="active"><th>Design Description</th></tr>
+						<tr><td>
+							<textarea class="form-control" cols="40" id="id_design_description" maxlength="500" name="design_description" placeholder="..." rows="6">{{design_description}}</textarea>
+						</td></tr>
+						<tr class="active"><th>Final Designs</th></tr>
+						{% for design_id in designs_id %}
+						<tr>
+							<td>
+								<a href="{% url 'view_uploaded_image' design_id %}"><img alt="140x140" src="{% url 'view_uploaded_image' design_id %}" class="postimg"></a>
+								<button class="btn" name="delete-{{design_id}}">delete</button>
+							</td>
+						</tr>
+						{% endfor %}
+						<tr>
+							<td>
+								<input id="id_designs" name="designs" type="file" />
+							</td>
+						</tr>
+						{{form.errors}}
+					</tbody>
+				</table>
+				
+				<!-- Two Buttons -->
+				<div class="row">
+					<div class="col-md-1">
+							<input type="submit" class="btn btn-primary btn-md" role="button" value="Update">
+							<input type="hidden" name="post_id" value='{{design_response.design_request.id}}'>
+							{%csrf_token%}
+					</div>
+					<div class="col-md-2">
+						<a class="btn btn-primary btn-md" href="{% url 'view_post' design_response.design_request.id %}" role="button">Go back</a>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+{% endblock %}

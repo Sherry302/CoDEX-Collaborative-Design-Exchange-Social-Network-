@@ -1,0 +1,87 @@
+{% extends template_current_status %}
+{% load staticfiles %}
+
+{% block content %}
+{{form.errors}}
+<div class="row">
+	<div class="col-lg-2"></div>
+	<div class="col-lg-6">
+		<form method="post" action="{% url 'add_post' %}" enctype="multipart/form-data">
+			<legend>CoDEX Post Request</legend>
+			<div class="form-group">
+				<label class="control-label">Title</label> 
+				<div class="controls"><textarea class="form-control" cols="40" id="id_title" maxlength="60" name="title" placeholder="Subject" rows="1"></textarea>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="control-label">Description</label> 
+				<p>Describe in detail the purpose, requirements, prefered style, etc... to make sure you get what you like.</p>
+				<div class="controls">
+					<textarea class="form-control" cols="40" id="id_text" maxlength="500" name="text" placeholder="..." rows="6"></textarea>	
+				</div>
+			</div>
+						
+			<div class="form-group">
+				<label class="control-label">Tags</label> 
+				<p>Tags will help designers find your request. Choose from the default tags and add your own!</p>
+				<div class="controls">
+					<ul id="id_tags" class="post_request_tags_list">
+						<li><label for="id_tags_0"><input class="checkbox-inline" id="id_tags_0" name="tags" type="checkbox" value="1" /> Logo</label></li>
+						<li><label for="id_tags_1"><input class="checkbox-inline" id="id_tags_1" name="tags" type="checkbox" value="2" /> Web UI</label></li>
+						<li><label for="id_tags_2"><input class="checkbox-inline" id="id_tags_2" name="tags" type="checkbox" value="3" /> Mobile UI</label></li>
+						<li><label for="id_tags_3"><input class="checkbox-inline" id="id_tags_3" name="tags" type="checkbox" value="4" /> Illustration</label></li>
+						<li><label for="id_tags_4"><input class="checkbox-inline" id="id_tags_4" name="tags" type="checkbox" value="5" /> Photoshop</label></li>
+						<li><label for="id_tags_5"><input class="checkbox-inline" id="id_tags_5" name="tags" type="checkbox" value="6" /> Poster</label></li>
+						<li><label for="id_tags_6"><input class="checkbox-inline" id="id_tags_6" name="tags" type="checkbox" value="7" /> Graphic</label></li>
+						<li><label for="id_tags_7"><input class="checkbox-inline" id="id_tags_7" name="tags" type="checkbox" value="8" /> Photo</label></li>
+						<li><label for="id_tags_8"><input class="checkbox-inline" id="id_tags_8" name="tags" type="checkbox" value="9" /> Drawing</label></li>
+						<li><label for="id_tags_9"><input class="checkbox-inline" id="id_tags_9" name="tags" type="checkbox" value="10" /> Infographic</label></li>
+					</ul>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label for="id_request_mode_0">Request mode:</label>
+				<p>Two modes available. In bidding mode, you will have 3 days to choose one designer to help since the last designer bid on your request.</p>
+				<ul id="id_request_mode" class="post_request_mode">
+					<li><label for="id_request_mode_0"><input id="id_request_mode_0" name="request_mode" type="radio" value="1" /> First-come-first-serve</label></li>
+					<li><label for="id_request_mode_1"><input id="id_request_mode_1" name="request_mode" type="radio" value="2" /> bidding</label></li>
+				</ul>
+			</div>
+
+			<div class="form-group">
+				<label class="control-label">Drafts or reference images</label> 
+				<p>Upload drafts or reference designs to help Designers understand what you expect!</p>
+				<div class="controls">
+						<input id="id_uploaded_image" name="uploaded_image" type="file"/>
+						<input id="id_uploaded_image" name="uploaded_image2" type="file"/>
+						<input id="id_uploaded_image" name="uploaded_image3" type="file"/>
+						<input id="id_uploaded_image" name="uploaded_image4" type="file"/>
+						<input id="id_uploaded_image" name="uploaded_image5" type="file"/>	
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="control-label">Gift info</label> 
+				<p>Provide an attractive gift to draw designers' attention!</p>
+				<div class="controls">
+					<textarea class="form-control" cols="40" id="id_gift_info" maxlength="200" name="gift_info" placeholder="..." rows="6"></textarea>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="control-label">Drafts or reference images</label> 
+				<p>Have a picture of your gift? Upload to drag more attention.</p>
+				<div class="controls"><input id="id_uploaded_image" name="gift_image" type="file" />	
+				</div>
+			</div>
+
+			<div class="form-actions">
+				<button type="submit" class="btn btn-primary">Submit</button>
+			</div>
+			{% csrf_token %}
+		</form>
+	</div>
+</div>
+{% endblock %}

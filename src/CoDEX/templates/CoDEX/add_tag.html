@@ -1,0 +1,20 @@
+{% extends template_current_status %}
+
+{% block content %}
+    <p class='subtitle'>
+        Add a new tag:
+    </p>
+
+    <form method="post" action="{% url 'add_tag' %}">
+        <table class='login'>
+		{{form}}
+	</table>
+   	{% for error in errors %}
+     	    <p class='error'>
+     	       {{ error }}
+    	    </p>
+  	{% endfor %}
+        <input type="submit" value="Add tag" />
+        {% csrf_token %}
+    </form>
+{% endblock %}

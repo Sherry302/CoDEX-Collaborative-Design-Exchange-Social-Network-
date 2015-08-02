@@ -1,0 +1,171 @@
+{% extends template_current_status %}
+{% load staticfiles %}
+
+{% block content %}
+
+<div class="container" style="opacity: 0.85;">
+	<h1 class="page-header">Hey! Welcome to CoDEX!
+		<small>Design is power.</small>
+	</h1>
+
+	<!-- Requests I have accepted -->
+	<h3 class="page-header"> My On-going Tasks: </h3>
+	{% if not accepted_requests %}
+		<p class="lead"> Oops, you haven't accepted any requests yet. <br>
+			Go find something interesting in the design market!</p>
+		<a class="btn btn-primary btn-lg" href="{% url 'design_market' %}" role="button">Go to the design market!</a>
+	{% endif %}
+
+	{% for post in accepted_requests %}
+	{% cycle '<div class="row">' '' '' %}
+	<div class="col-sm-6 col-md-4 blog-main">
+	 	<div class="post-container">
+	 		<table class="post-table">
+	 			<tbody>
+	 				<tr>
+	 					<td style="width: 70px;">
+	 						{% if post.user.userprofile.profile_image %}
+							<img src="{% url 'photo' post.user.id %}" alt="100x100" class="profileimg-small">
+							{% else %}
+							<img alt="140x140" src="{% static 'images/default.jpg' %}" class="profileimg-small">
+							{% endif %}
+	 					</td>
+						<td><p class="post-shortened-title"><a href="{% url 'view_post' post.id %}">{{ post.title }}</a></p></td>
+					</tr>
+					<tr>
+						<td><p style="margin-left: 15px;"><a href="{% url 'view_profile' post.user.id%}">{{post.user.username}}</a></p></td>
+						<td><p class="post-shortened-text">"{{ post.text }}"</p></td>
+					</tr>
+					<tr>
+						<td></td><td><p class="post-info">{{ post.date_posted }}</p></td>
+					</tr>
+					<tr>
+						<td></td><td><p class="post-info">Waiting for response</p></td>
+					</tr>
+					<tr class="post-button">
+						<td><a class="btn btn-primary" href="{% url 'view_post' post.id %}" role="button">View Details</a></td>
+					</tr>
+					{% if post.date_final_design_accepted and post.gift_received %}
+						<img src="{% static 'images/done-logo.png' %}" class="done-logo-listing">
+					{% endif %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+	{% if forloop.last %}
+		{% if accepted_requests_ifmod3 %}
+			</div>
+		{% endif %}
+	{% endif %}
+	{% cycle ,,</div> %}
+	{% endfor %}
+
+	<!-- The requests from my friends -->
+	<h3 class="page-header"> Requests from your CoDEX friends: </h3>
+	{% if not friends_posts %}
+		<p class="lead"> Oops, you haven't added any friends or indicated any interests yet. <br>
+			Go find something interesting in the design market!</p>
+		<a class="btn btn-primary btn-lg" href="{% url 'design_market' %}" role="button">Go to the design market!</a>
+	{% endif %}
+
+	{% for post in friends_posts %}
+	{% cycle '<div class="row">' '' '' %}
+	<div class="col-sm-6 col-md-4 blog-main">
+	 	<div class="post-container">
+	 		<table class="post-table">
+	 			<tbody>
+	 				<tr>
+	 					<td style="width: 70px;">
+	 						{% if post.user.userprofile.profile_image %}
+							<img src="{% url 'photo' post.user.id %}" alt="100x100" class="profileimg-small">
+							{% else %}
+							<img alt="140x140" src="{% static 'images/default.jpg' %}" class="profileimg-small">
+							{% endif %}
+	 					</td>
+						<td><p class="post-shortened-title"><a href="{% url 'view_post' post.id %}">{{ post.title }}</a></p></td>
+					</tr>
+					<tr>
+						<td><p style="margin-left: 15px;"><a href="{% url 'view_profile' post.user.id%}">{{post.user.username}}</a></p></td>
+						<td><p class="post-shortened-text">"{{ post.text }}"</p></td>
+					</tr>
+					<tr>
+						<td></td><td><p class="post-info">{{ post.date_posted }}</p></td>
+					</tr>
+					<tr>
+						<td></td><td><p class="post-info">Waiting for response</p></td>
+					</tr>
+					<tr class="post-button">
+						<td><a class="btn btn-primary" href="{% url 'view_post' post.id %}" role="button">View Details</a></td>
+					</tr>
+					{% if post.date_final_design_accepted and post.gift_received %}
+						<img src="{% static 'images/done-logo.png' %}" class="done-logo-listing">
+					{% endif %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+	{% if forloop.last %}
+		{% if accepted_requests_ifmod3 %}
+			</div>
+		{% endif %}
+	{% endif %}
+	{% cycle ,,</div> %}
+	{% endfor %}
+
+	<!-- The posts that have tag that interests me -->
+	<h3 class="page-header"> Recommendations based on your interests: </h3>
+	
+	<h4> Your current interest: </h4>
+	{% for item in interests %}
+		<p class="interest-names-designer-homepage">{{item}};</p>
+	{% endfor %}
+
+	<form class="add-interest-designer-homepage form-inline" action='{% url 'add_an_interest' %}' method='post'>
+		<input type="text" class="form-control" placeholder="One tag at a time" name='tag_name'>
+		<input type="submit" class="btn" value="Add Interest">
+		{%csrf_token%}
+	</form>
+
+
+	{% for interest in interested_posts %}
+	{% for post in interest %}
+	{% cycle '<div class="row">' '' '' %}
+	<div class="col-sm-6 col-md-4 blog-main">
+	 	<div class="post-container">
+	 		<table class="post-table">
+	 			<tbody>
+	 				<tr>
+	 					<td style="width: 70px;">
+	 						{% if post.user.userprofile.profile_image %}
+							<img src="{% url 'photo' post.user.id %}" alt="100x100" class="profileimg-small">
+							{% else %}
+							<img alt="140x140" src="{% static 'images/default.jpg' %}" class="profileimg-small">
+							{% endif %}
+	 					</td>
+						<td><p class="post-shortened-title"><a href="{% url 'view_post' post.id %}">{{ post.title }}</a></p></td>
+					</tr>
+					<tr>
+						<td><p style="margin-left: 15px;"><a href="{% url 'view_profile' post.user.id%}">{{post.user.username}}</a></p></td>
+						<td><p class="post-shortened-text">"{{ post.text }}"</p></td>
+					</tr>
+					<tr>
+						<td></td><td><p class="post-info">{{ post.date_posted }}</p></td>
+					</tr>
+					<tr>
+						<td></td><td><p class="post-info">Waiting for response</p></td>
+					</tr>
+					<tr class="post-button">
+						<td><a class="btn btn-primary" href="{% url 'view_post' post.id %}" role="button">View Details</a></td>
+					</tr>
+					{% if post.date_final_design_accepted and post.gift_received %}
+						<img src="{% static 'images/done-logo.png' %}" class="done-logo-listing">
+					{% endif %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+	{% cycle ,,</div> %}
+	{% endfor %}
+	{% endfor %}
+</div>
+{% endblock %}

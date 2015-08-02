@@ -1,0 +1,97 @@
+{% extends template_current_status %}
+{% load staticfiles %}
+
+{% block content %}
+
+<div class="container">
+
+	 {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+      <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+
+	<div class="post-page-section row ">
+		<div class="col-md-1"></div>
+		<div class="col-md-3 blog-main">
+			{% if profile.profile_image %}
+			<img src="{% url 'photo' profile.user.id %}" alt="140x140" class="profileimg">
+			{% else %}
+			<img alt="140x140" src="../../static/images/default.jpg" class="profileimg">
+			{% endif %}
+			<p class="text-center">User Name: {{ profile.user.get_username }}</p>
+		</div> 
+	 
+		<div class="col-md-8 blog-main ">
+			<table class="profile-table">
+				<colgroup>
+					<col style="width: 20%">
+					<col style="width: 80%">
+				</colgroup>
+				<tr><th>User Name:</th><td>{{ profile.user.get_username }}</td></tr>
+				<tr><th>Full Name:</th><td> {{ profile.user.get_full_name}}</td></tr>
+				<tr><th>Email:</th><td> {{profile.user.email}}</td></tr>
+				<tr><th>Age:</th><td>{{ profile.age }}</td></tr>
+				<tr><th>Bio:</th><td>{{ profile.bio }}</td></tr>
+				<tr><th>School:</th><td>{{ profile.school }}</td></tr>
+				<tr><th>Register Date:</th><td>{{ profile.age }}</td></tr>
+				<tr><th>Last Login:</th><td>{{ thisUser.last_login }}</td></tr>
+			</table>
+
+			{% if showEditProfileButton %}
+			<a href="{% url 'edit_profile' profile.user.id%}"><button type="submit" class="btn btn-primary space">Edit</button></a>
+			{% endif %}
+			<a href="/send_message?recipient_id={{profile.user.id}}"><button type="button" class="btn btn-primary space"> Contact User </button></a>
+		</div>
+	</div>
+
+	{% if profile.role = 2 %}
+		<!-- If designer, show past designs -->
+		<h3 class="page-header"> Past Designs: </h3>
+		{% if not request_names %}
+			<p class="lead"> Oops, you haven't added any friends or indicated any interests yet. <br>
+				Go find something interesting in the design market!</p>
+			<a class="btn btn-primary btn-lg" href="{% url 'design_market' %}" role="button">Go to the design market!</a>
+		{% endif %}
+
+		{% for request in request_names %}
+		{% cycle addRow '' '' %}
+		<div class="col-sm-6 col-md-4 blog-main">
+		 	<div class="post-container">
+		 		<table class="post-table">
+		 			<tbody>
+		 				<tr>
+							<td><p class="post-shortened-title"><a href="{% url 'view_post' request.post_id %}">{{ request.title }}</a></p></td>
+						</tr>
+
+						<tr>
+							<td><p class="post-info">{{ request.date_posted }}</p></td>
+						</tr>
+						<tr><td>
+							{% for img_id in request.designs %}
+								<img src="{% url 'view_uploaded_image' img_id %}" class="postimg-small">
+							{% endfor %}
+						</td></tr>
+						<tr class="post-button">
+							<td><a class="btn btn-primary" href="{% url 'view_post' request.post_id %}" role="button">View Details</a></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		{% if forloop.last %}
+			{% if accepted_requests_ifmod3 %}
+				</div>
+			{% endif %}
+		{% endif %}
+		{% cycle ,,</div> %}
+		{% endfor %}
+	{% endif %}
+
+</div>
+
+{% endblock %}
+
