@@ -8,4 +8,4 @@ Packages needed to install:
 1. pip install django-social-auth 
 2. pip install Pillow 
 
-
+The Repository is only used for study. All rights reserved.
